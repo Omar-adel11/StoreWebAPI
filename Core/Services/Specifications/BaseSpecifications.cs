@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Contracts;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Specifications
 {

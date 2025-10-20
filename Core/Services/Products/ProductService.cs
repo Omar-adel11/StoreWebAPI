@@ -21,14 +21,17 @@ namespace Services.Products
             //spec.Includes.Add(p => p.Brand);
             //spec.Includes.Add(p => p.Type);
 
-            var spec = new ProductWithBrandAndTypeSpecifications(null);
+            var spec = new ProductWithBrandAndTypeSpecifications();
             var products = await _unitOfWork.GetRepository<int, Product>().GetAllAsync(spec);
+
             var result = _mapper.Map<IEnumerable<ProductResponse>>(products);
             return result;
         }
         public async Task<ProductResponse> GetProductByIdAsync(int id)
         {
-            var product = await _unitOfWork.GetRepository<int, Product>().GetByIdAsync(id);
+            var spec = new ProductWithBrandAndTypeSpecifications(id);
+            var product = await _unitOfWork.GetRepository<int, Product>().GetByIdAsync(spec);
+            //var product = await _unitOfWork.GetRepository<int, Product>().GetByIdAsync(id);
             var result = _mapper.Map<ProductResponse>(product); 
             return result;
         }

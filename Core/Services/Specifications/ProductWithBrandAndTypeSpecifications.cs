@@ -10,11 +10,21 @@ namespace Services.Specifications
 {
     public class ProductWithBrandAndTypeSpecifications : BaseSpecifications<int, Product>
     {
-        public ProductWithBrandAndTypeSpecifications(Expression<Func<Product,bool>>? expression) : base(expression)
+        public ProductWithBrandAndTypeSpecifications() : base(null)
+        {
+            ApplyIncludes();
+        }
+
+        public ProductWithBrandAndTypeSpecifications(int id) : base(p=>p.Id == id)
+        {
+            ApplyIncludes();
+        }
+
+        private void ApplyIncludes()
         {
             Includes.Add(p => p.Brand);
             Includes.Add(p => p.Type);
         }
-        
+
     }
 }
