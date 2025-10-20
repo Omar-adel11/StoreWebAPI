@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Domain.Contracts
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
+        IGenericRepository<TKey, TEntity> GetRepository<TKey, TEntity>() where TEntity : BaseEntity<TKey>;
+        Task<int> SaveChangesAsync();
     }
 }

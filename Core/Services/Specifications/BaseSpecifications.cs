@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Domain.Contracts;
+using Domain.Entities;
+
+namespace Services.Specifications
+{
+    public class BaseSpecifications<Tkey, TEntity> : ISpecifications<Tkey, TEntity> where TEntity : BaseEntity<Tkey>
+    {
+        public List<Expression<Func<TEntity, object>>> Includes { get;  set ; } = new List<Expression<Func<TEntity, object>>>();
+        public Expression<Func<TEntity, bool>>? Criteria { get ; set ; }
+
+        public BaseSpecifications(Expression<Func<TEntity, bool>>? expression)
+        {
+            Criteria = expression;
+        }
+    }
+}

@@ -3,6 +3,13 @@ using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Persistance.Data.Contexts;
+using Persistance.Repositories;
+using Services.Mapping.Products;
+using AutoMapper;
+using ServicesAbstractions;
+using Services;
+using Services.Products;
+using ServicesAbstractions.Products; // Add this using directive at the top of the file
 
 namespace Store.Web
 {
@@ -25,7 +32,11 @@ namespace Store.Web
             });
 
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(builder.Configuration)));
+            
             var app = builder.Build();
 
             #region Initialize DB
@@ -46,6 +57,7 @@ namespace Store.Web
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
 
             app.MapControllers();
 
