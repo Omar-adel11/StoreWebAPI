@@ -64,6 +64,11 @@ namespace Persistance.Repositories
         {
             return SpecificationsEvaluator.GetQuery(_context.Set<TEntity>(), spec);
         }
+
+        public async Task<int> GetCountAsync(ISpecifications<Tkey, TEntity> spec)
+        {
+            return await ApplySpecifications(spec).CountAsync();
+        }
     }
 
 

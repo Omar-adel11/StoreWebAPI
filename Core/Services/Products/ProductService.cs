@@ -8,6 +8,7 @@ using Domain.Contracts;
 using Domain.Entities.Product;
 using Services.Specifications;
 using ServicesAbstractions.Products;
+using Shared;
 using Shared.DTOs.Products;
 
 namespace Services.Products
@@ -15,17 +16,20 @@ namespace Services.Products
     public class ProductService(IUnitOfWork _unitOfWork, IMapper _mapper) : IProductService
     {
 
-        public async Task<IEnumerable<ProductResponse>> GetAllProductAsync()
+        public async Task<PaginationResponse<ProductResponse>> GetAllProductAsync(ProductQueryParameters parameters)
         {
             //var spec = new BaseSpecifications<int, Product>(null);
             //spec.Includes.Add(p => p.Brand);
             //spec.Includes.Add(p => p.Type);
 
-            var spec = new ProductWithBrandAndTypeSpecifications();
+            var spec = new ProductWithBrandAndTypeSpecifications(parameters);
             var products = await _unitOfWork.GetRepository<int, Product>().GetAllAsync(spec);
+            var specCount = new ProductsCountSpecifications(parameters);
+
+            var count = await _unitOfWork.GetRepository<int, Product>().GetCountAsync(specCount);
 
             var result = _mapper.Map<IEnumerable<ProductResponse>>(products);
-            return result;
+            return new PaginationResponse<ProductResponse>(parameters.pageSize, parameters.pageIndex, count, result);
         }
         public async Task<ProductResponse> GetProductByIdAsync(int id)
         {

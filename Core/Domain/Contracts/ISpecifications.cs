@@ -12,5 +12,13 @@ namespace Domain.Contracts
     {
          List<Expression<Func<TEntity,object>>> Includes { get; set; }
          Expression<Func<TEntity,bool>>? Criteria { get; set; }
+
+        Expression <Func<TEntity, object>>? OrderBy { get; set; }
+        Expression <Func<TEntity, object>>? OrderBydescending { get; set; }
+         int skip { get; set; }
+        int take { get; set; }
+        bool isPagination { get; set; }
+
+
     }
 }

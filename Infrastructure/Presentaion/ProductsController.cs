@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAbstractions.Products;
+using Shared;
 
 namespace Presentaion
 {
@@ -15,10 +16,10 @@ namespace Presentaion
     {
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts([FromQuery]ProductQueryParameters productQueryparameters)
         {
-            var products = await _productService.GetAllProductAsync();
-            if(products == null || !products.Any())
+            var products = await _productService.GetAllProductAsync(productQueryparameters);
+            if(products == null || !products.Data.Any())
             {
                 return NotFound("No products found.");
             }
