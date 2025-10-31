@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServicesAbstractions.Baskets;
 using ServicesAbstractions.Products;
 
 namespace ServicesAbstractions
 {
-    public class IServiceManager
+    public interface IServiceManager
     {
-        IProductService productService { get; }
+         IProductService productService { get; }
+         IBasketService basketService { get; }
     }
 }
