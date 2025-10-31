@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Mapping.Basket;
@@ -18,8 +19,8 @@ namespace Services
         public static IServiceCollection AddApplicationService(this IServiceCollection Services,IConfiguration Configuration)
         {
             Services.AddScoped<IProductService, ProductService>();
-            Services.AddScoped<IServiceManager, ServiceManager>();
             
+
             //Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(builder.Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new BasketProfile()));

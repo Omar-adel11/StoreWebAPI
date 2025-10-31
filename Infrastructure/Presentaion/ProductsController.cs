@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentaion.Attributes;
 using ServicesAbstractions;
 using ServicesAbstractions.Baskets;
 using ServicesAbstractions.Products;
@@ -24,6 +25,7 @@ namespace Presentaion
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<ProductResponse>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ValidationErrorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
+        [Cache(1000)]
         public async Task<ActionResult<PaginationResponse<ProductResponse>>> GetAllProducts([FromQuery] ProductQueryParameters productQueryparameters)
         {
             var products = await serviceManager.productService.GetAllProductAsync(productQueryparameters);
