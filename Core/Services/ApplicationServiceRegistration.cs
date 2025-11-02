@@ -11,6 +11,7 @@ using Services.Mapping.Products;
 using Services.Products;
 using ServicesAbstractions;
 using ServicesAbstractions.Products;
+using Shared;
 
 namespace Services
 {
@@ -24,6 +25,8 @@ namespace Services
             //Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(builder.Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new BasketProfile()));
+
+            Services.Configure<JWTOptions>(Configuration.GetSection("JWTOptions"));
 
             return Services;
         }

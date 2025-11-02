@@ -1,7 +1,11 @@
 ﻿using Domain.Contracts;
+using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistance;
+using Persistance.Identity;
 using Services;
+using Shared;
 using Shared.Errors;
 using Store.Web.Middlewares;
 
@@ -14,13 +18,15 @@ namespace Store.Web.Extensions
 
             // Add services to the container.
             AddBuiltinServices(Services);
-
+            AddIdentityServices(Services);
 
             AddSwaggerServices(Services);
 
             Services.AddInfrastructureServices(Configuration);
 
             Services.AddApplicationService(Configuration);
+
+            
 
             ConfigureServices(Services);
 
@@ -62,6 +68,13 @@ namespace Store.Web.Extensions
             // Add services to the container.
 
             Services.AddControllers();
+            
+            return Services;
+        }
+        private static IServiceCollection AddIdentityServices(this IServiceCollection Services)
+        {
+
+            Services.AddIdentity<Appuser,IdentityRole>().AddEntityFrameworkStores<StoreIdentityDbContext>();  
             
             return Services;
         }
@@ -109,6 +122,7 @@ namespace Store.Web.Extensions
             using var scope = app.Services.CreateScope();
             var DbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
             await DbInitializer.InitializeAsync();
+            await DbInitializer.InitializeIdentityAsync();
             #endregion
             return app;
         }

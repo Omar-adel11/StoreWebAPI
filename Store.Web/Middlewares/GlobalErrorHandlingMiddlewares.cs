@@ -38,19 +38,29 @@ namespace Store.Web.Middlewares
             //4.return Response
 
             context.Response.ContentType = "application/json";
-            var respone = new ErrorDetails()
+
+            var respone = new ErrorDetails
             {
-                ErrorMessage = "Internal Server Error. Please try again later."
+                StatusCode = ex switch
+                {
+                    NotFoundException => StatusCodes.Status404NotFound,
+                    RegisterationBadRequestException => StatusCodes.Status400BadRequest,
+                    BadRequestException => StatusCodes.Status400BadRequest,
+                    UnauthorizedException => StatusCodes.Status401Unauthorized,
+                    _ => StatusCodes.Status500InternalServerError
+                },
+                
+                ErrorMessage = ex switch
+                {
+                    UnauthorizedException or
+                    NotFoundException or
+                    BadRequestException or
+                    RegisterationBadRequestException => ex.Message,
+                    _ => "Internal Server Error. Please try again later."
+                }
             };
 
-            respone.StatusCode = ex switch
-            {
-                NotFoundException => StatusCodes.Status404NotFound,
-                BadRequestException => StatusCodes.Status400BadRequest,
-                _ => StatusCodes.Status500InternalServerError
-            };
             context.Response.StatusCode = respone.StatusCode;
-
             await context.Response.WriteAsJsonAsync(respone);
         }
 

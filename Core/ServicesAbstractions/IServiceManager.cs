@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServicesAbstractions.Baskets;
+using ServicesAbstractions.Identity;
 using ServicesAbstractions.Products;
 
 namespace ServicesAbstractions
@@ -12,6 +13,8 @@ namespace ServicesAbstractions
     {
          IProductService productService { get; }
          IBasketService basketService { get; }
-        ICacheService cacheService { get; }
+         ICacheService cacheService { get; }
+
+         IAuthService authService { get; }
     }
 }
