@@ -1,7 +1,11 @@
-﻿using Domain.Contracts;
+﻿using System.Text;
+using Domain.Contracts;
 using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Persistance;
 using Persistance.Identity;
 using Services;
@@ -25,8 +29,10 @@ namespace Store.Web.Extensions
             Services.AddInfrastructureServices(Configuration);
 
             Services.AddApplicationService(Configuration);
+            Services.ConfigureJWTServices(Configuration);
 
-            
+
+
 
             ConfigureServices(Services);
 
@@ -52,7 +58,7 @@ namespace Store.Web.Extensions
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseStaticFiles();
@@ -113,6 +119,35 @@ namespace Store.Web.Extensions
                     return new BadRequestObjectResult(response);
                 };
             });
+
+            return Services;
+        }
+
+        private static IServiceCollection ConfigureJWTServices(this IServiceCollection Services,IConfiguration Configuration)
+        {
+
+            var jwtoptions = Configuration.GetSection("JWTOptions").Get<JWTOptions>();
+
+            Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtoptions.Issuer,
+                    ValidAudience = jwtoptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtoptions.Secretkey))
+
+
+                };
+            });
+
 
             return Services;
         }
