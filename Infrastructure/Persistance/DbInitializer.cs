@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Domain.Contracts;
 using Domain.Entities.Identity;
+using Domain.Entities.Order;
 using Domain.Entities.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +81,22 @@ namespace Persistance
                 }
 
             }
+
+            if (!_context.DeliveryMethods.Any())
+            {
+                //1. DeliveryMethods
+                //1.read all data
+                var DeliveryData = await File.ReadAllTextAsync(@"../Infrastructure/Persistance/Data/DataSeeding/delivery.json");
+                //2.Deserialize
+                var DeliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(DeliveryData);
+                //3.check if data exist then add list to database
+                if (DeliveryMethods is not null && DeliveryMethods.Count > 0)
+                {
+                    await _context.DeliveryMethods.AddRangeAsync(DeliveryMethods);
+
+                }
+            }
+
 
             await _context.SaveChangesAsync();
 

@@ -11,10 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Services.Basket;
 using Services.Identity;
+using Services.Order;
 using Services.Products;
 using ServicesAbstractions;
 using ServicesAbstractions.Baskets;
 using ServicesAbstractions.Identity;
+using ServicesAbstractions.Orders;
 using ServicesAbstractions.Products;
 using Shared;
 
@@ -36,5 +38,7 @@ namespace Services
         public ICacheService cacheService { get; } = new CacheService(cacheRepository);
 
         public IAuthService authService { get; } = new AuthService(_userManager, _options);
+
+        public IOrderService orderService{ get; } = new OrderService(_unitOfWork, _mapper,_BasketRepository);
     }
 }
