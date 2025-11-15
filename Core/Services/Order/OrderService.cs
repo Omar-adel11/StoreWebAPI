@@ -51,7 +51,7 @@ namespace Services.Order
             var subtotal = orderItems.Sum(i => i.Price * i.Quantity);
 
             // Change 'Order' to 'Domain.Entities.Order.Order' to resolve ambiguity between namespace and type
-            var order = new Domain.Entities.Order.Order(UserEmail, OrderAdress, deliveryMethod, orderItems, subtotal);
+            var order = new Domain.Entities.Order.Order(UserEmail, OrderAdress, deliveryMethod, orderItems, subtotal,Basket.PaymentIntentId);
             
             //Add Order 
             await _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().AddAsync(order);

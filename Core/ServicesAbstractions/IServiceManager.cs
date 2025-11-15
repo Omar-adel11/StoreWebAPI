@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ServicesAbstractions.Baskets;
 using ServicesAbstractions.Identity;
 using ServicesAbstractions.Orders;
+using ServicesAbstractions.Payment;
 using ServicesAbstractions.Products;
 
 namespace ServicesAbstractions
@@ -16,6 +17,7 @@ namespace ServicesAbstractions
          IBasketService basketService { get; }
          ICacheService cacheService { get; }
          IAuthService authService { get; }
-        IOrderService orderService { get; }
+         IOrderService orderService { get; }
+         IPaymentService paymentService { get; }
     }
 }

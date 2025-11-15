@@ -14,13 +14,14 @@ namespace Domain.Entities.Order
         {
             //parameterless constructor for EF
         }
-        public Order(string userEmail, OrderAddress shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> orderItems, decimal subtotal)
+        public Order(string userEmail, OrderAddress shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> orderItems, decimal subtotal, string? paymentIntentId)
         {
             UserEmail = userEmail;
             ShippingAddress = shippingAddress;
             DeliveryMethod = deliveryMethod;
             this.Items = orderItems;
             Subtotal = subtotal;
+            PaymentIntentId = paymentIntentId;
         }
 
         public string UserEmail { get; set; }
@@ -36,5 +37,7 @@ namespace Domain.Entities.Order
         //public decimal Total { get; set; } // subtotal + delivery fee
         public decimal GetTotal() =>  Subtotal + DeliveryMethod.Price; //not mapped 
 
-    }
+        public string? PaymentIntentId { get; set; }
+
+        }
 }

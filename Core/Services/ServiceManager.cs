@@ -12,11 +12,13 @@ using Microsoft.Extensions.Options;
 using Services.Basket;
 using Services.Identity;
 using Services.Order;
+using Services.Payments;
 using Services.Products;
 using ServicesAbstractions;
 using ServicesAbstractions.Baskets;
 using ServicesAbstractions.Identity;
 using ServicesAbstractions.Orders;
+using ServicesAbstractions.Payment;
 using ServicesAbstractions.Products;
 using Shared;
 
@@ -29,6 +31,7 @@ namespace Services
         IBasketRepository _BasketRepository,
         ICacheRepository cacheRepository,
         IOptions<JWTOptions> _options,
+        IConfiguration configuration,
         UserManager<Appuser> _userManager) : IServiceManager
     {
         public IProductService productService { get; } = new ProductService(_unitOfWork, _mapper);
@@ -42,5 +45,6 @@ namespace Services
 
         public IOrderService orderService{ get; } = new OrderService(_unitOfWork, _mapper,_BasketRepository);
 
+        public IPaymentService paymentService { get; } = new PaymentService(_BasketRepository, _unitOfWork ,configuration, _mapper);
     }
 }
