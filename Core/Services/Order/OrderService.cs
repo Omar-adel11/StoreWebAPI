@@ -50,6 +50,13 @@ namespace Services.Order
             //Calculate subtotal
             var subtotal = orderItems.Sum(i => i.Price * i.Quantity);
 
+            var orderExistsSpec = new OrderByPaymentIntentIdSpecification(Basket.PaymentIntentId);
+            var existingOrder = await _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().GetByIdAsync(orderExistsSpec);
+            if (existingOrder != null)
+            {
+                _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().Delete(existingOrder);
+            }
+
             // Change 'Order' to 'Domain.Entities.Order.Order' to resolve ambiguity between namespace and type
             var order = new Domain.Entities.Order.Order(UserEmail, OrderAdress, deliveryMethod, orderItems, subtotal,Basket.PaymentIntentId);
             
