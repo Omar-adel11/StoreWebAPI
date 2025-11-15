@@ -7,7 +7,11 @@ using Domain.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Mapping.Basket;
+<<<<<<< HEAD
 using Services.Mapping.Order;
+=======
+using Services.Mapping.Identity;
+>>>>>>> Dev.Security
 using Services.Mapping.Products;
 using Services.Products;
 using ServicesAbstractions;
@@ -26,7 +30,11 @@ namespace Services
             //Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(builder.Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new ProductsProfile(Configuration)));
             Services.AddAutoMapper(m => m.AddProfile(new BasketProfile()));
+<<<<<<< HEAD
             Services.AddAutoMapper(m => m.AddProfile(new OrderProfile()));
+=======
+            Services.AddAutoMapper(m => m.AddProfile(new AuthProfile()));
+>>>>>>> Dev.Security
 
             Services.Configure<JWTOptions>(Configuration.GetSection("JWTOptions"));
 
