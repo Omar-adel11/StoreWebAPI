@@ -21,5 +21,16 @@ namespace Presentaion
             var result = await _serviceManager.paymentService.CreatePaymentIntentAsync(basketId);
             return Ok(result);
         }
+
+
+        [HttpPost("webhook")]
+        public async Task<IActionResult> webhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var signatureHeader = Request.Headers["Stripe-Signature"];
+            await _serviceManager.paymentService.UpdatePaymentStatusAsync(json, signatureHeader);
+
+            return new EmptyResult();
+        }
     }
 }

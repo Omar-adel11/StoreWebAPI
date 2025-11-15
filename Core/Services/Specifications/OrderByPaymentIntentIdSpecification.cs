@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Services.Specifications
 {
-    internal class OrderByPaymentIntentIdSpecification
+    public class OrderByPaymentIntentIdSpecification : BaseSpecifications<Guid,Domain.Entities.Order.Order>
     {
+        public OrderByPaymentIntentIdSpecification(string PaymentIntentId) : base(o => o.PaymentIntentId == PaymentIntentId)
+        {
+            
+        }
     }
 }

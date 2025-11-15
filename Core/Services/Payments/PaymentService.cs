@@ -8,13 +8,14 @@ using Domain.Contracts;
 using Domain.Entities.Order;
 using Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Services.Specifications;
 using ServicesAbstractions.Payment;
 using Shared.DTOs.Basket;
 using Stripe;
 
 namespace Services.Payments
 {
-    public class PaymentService(IBasketRepository _basketRepository, IUnitOfWork _unitOfWork,IConfiguration configuration, IMapper _mapper) : IPaymentService
+    public class PaymentService(IBasketRepository _basketRepository, IUnitOfWork _unitOfWork, IConfiguration configuration, IMapper _mapper) : IPaymentService
     {
         public async Task<BasketDto> CreatePaymentIntentAsync(string basketId)
         {
@@ -100,6 +101,58 @@ namespace Services.Payments
             return _mapper.Map<BasketDto>(Basket);  
 
 
+        }
+
+        public async Task UpdatePaymentStatusAsync(string json, string signatureHeader)
+        {
+             string endpointSecret = configuration.GetSection("StripeOptions")["endpointSecret"];
+            
+                var stripeEvent = EventUtility.ParseEvent(json,throwOnApiVersionMismatch:false);
+
+                stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, endpointSecret,throwOnApiVersionMismatch:false);
+
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                // Handle the event
+                // If on SDK version < 46, use class Events instead of EventTypes
+                if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
+                {
+                await UpdatePaymentStatusAsyncSucceeded(paymentIntent.Id);
+                }
+                else if (stripeEvent.Type == EventTypes.PaymentIntentPaymentFailed)
+                {
+
+                await UpdatePaymentStatusAsyncFailed(paymentIntent.Id);
+                }
+                 // ... handle other event types
+                else
+                {
+                    // Unexpected event type
+                    Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+                }
+             
+            
+        }
+
+        private async Task UpdatePaymentStatusAsyncFailed(string id)
+        {
+            var order = await _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().GetByIdAsync(new OrderByPaymentIntentIdSpecification(id));
+            if(order is not null)
+            {
+                order.Status = OrderStatus.PaymentFailed;
+                    _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().Update(order);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        private async Task UpdatePaymentStatusAsyncSucceeded(string id)
+        {
+            var order = await _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().GetByIdAsync(new OrderByPaymentIntentIdSpecification(id));
+            if (order is not null)
+            {
+                order.Status = OrderStatus.PaymentSuccess;
+                _unitOfWork.GetRepository<Guid, Domain.Entities.Order.Order>().Update(order);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
     }
 }

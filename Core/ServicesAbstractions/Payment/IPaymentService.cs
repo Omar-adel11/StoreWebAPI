@@ -10,5 +10,6 @@ namespace ServicesAbstractions.Payment
     public interface IPaymentService
     {
         Task<BasketDto> CreatePaymentIntentAsync(string basketId);
+        Task UpdatePaymentStatusAsync(string json, string signatureHeader);
     }
 }
