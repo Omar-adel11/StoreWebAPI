@@ -31,7 +31,15 @@ namespace Store.Web.Extensions
             Services.AddApplicationService(Configuration);
             Services.ConfigureJWTServices(Configuration);
 
-
+            Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
 
             ConfigureServices(Services);
@@ -49,6 +57,7 @@ namespace Store.Web.Extensions
 
             app.UseErrorHandlingMiddleware();
 
+            app.UseCors("AllowAll");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

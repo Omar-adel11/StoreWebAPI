@@ -37,12 +37,10 @@ namespace Services
 
         public ICacheService cacheService { get; } = new CacheService(cacheRepository);
 
-<<<<<<< HEAD
+
         public IAuthService authService { get; } = new AuthService(_userManager, _options,_mapper);
 
         public IOrderService orderService{ get; } = new OrderService(_unitOfWork, _mapper,_BasketRepository);
-=======
-        public IAuthService authService { get; } = new AuthService(_userManager, _options,_mapper);
->>>>>>> Dev.Security
+
     }
 }
