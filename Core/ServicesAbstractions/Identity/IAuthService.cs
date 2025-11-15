@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.DTOs.Identity;
 
 namespace ServicesAbstractions.Identity
 {
@@ -11,5 +12,12 @@ namespace ServicesAbstractions.Identity
         Task<UserResultDto> LoginAsync(LoginDto logindto);
 
         Task<UserResultDto> RegisterAsync(RegisterDto registerDto);
+
+        Task<bool> CheckEmailExistsAsync(string email);
+        Task<UserResultDto?> GetCurrentUserAsync(string email);
+
+        Task<AddressDto> GetUserAddressAsync(string email);
+        Task<AddressDto> GetUserAddressAsync(AddressDto address, string email);
+
     }
 }

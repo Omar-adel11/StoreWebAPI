@@ -35,6 +35,6 @@ namespace Services
 
         public ICacheService cacheService { get; } = new CacheService(cacheRepository);
 
-        public IAuthService authService { get; } = new AuthService(_userManager, _options);
+        public IAuthService authService { get; } = new AuthService(_userManager, _options,_mapper);
     }
 }

@@ -14,7 +14,6 @@ namespace ServicesAbstractions
          IProductService productService { get; }
          IBasketService basketService { get; }
          ICacheService cacheService { get; }
-
          IAuthService authService { get; }
     }
 }
